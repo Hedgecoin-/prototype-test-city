@@ -26,83 +26,93 @@
           <div class="panel-heading">Resources</span></div>
           <div class="panel-body">
             <div class="assign">
-              <div class="resource">Food: <span class="resource-name" id="res-food">0</span><span class="resource-increase">+0</span></div>
+              <div class="resource">Food: <span class="resource-name" id="res-food">0</span><span id="res-food-delta" class="resource-increase">+0</span></div>
             </div>
             <div class="assign">
-              <div class="resource">Water: <span class="resource-name" id="res-water">0</span><span class="resource-increase">+0</span></div>
+              <div class="resource">Materials: <span class="resource-name" id="res-materials">0</span><span id="res-materials-delta" class="resource-increase">+0</span></div>
             </div>
             <div class="assign">
-              <div class="resource">Materials: <span class="resource-name" id="res-materials">0</span><span class="resource-increase">+0</span></div>
+              <div class="resource">Fuel: <span class="resource-name" id="res-fuel">0</span><span id="res-fuel-delta" class="resource-increase">+0</span></div>
+            </div>
+            <div class="assign">
+              <div class="resource">Medicine: <span class="resource-name" id="res-medicine">0</span><span id="res-medicine-delta" class="resource-increase">+0</span></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Population Assignment -->
+      <!-- Population -->
       <div class="col-md-4">
         <div class="panel panel-default">
-          <div class="panel-heading">Population</div>
+          <div class="panel-heading">Population <span id="pop-total">0</span></div>
           <div class="panel-body">
-            <div class="assign" style="padding-bottom:10px">
-              <div class="resource">Housed: <span id="pop-housed">0/0</span></div>
-            </div>
             <div class="assign">
-              <a href="#" class="btn btn-default">-1</a>
+              <div class="resource">Not housed: <span id="pop-not-housed">0</span></div>
+            </div>
+            <div class="assign"  style="padding-bottom:10px">
               <div class="resource">Idle: <span id="pop-idle">0</span></div>
-              <a href="#" class="btn btn-default">+1</a>
             </div>
             <div class="assign">
-              <a href="#" class="btn btn-default">-1</a>
-              <div class="resource">Foraging: <span id="pop-forage">0</span></div>
-              <a href="#" class="btn btn-default">+1</a>
+              <a href="#" id="pop-foraging-min" class="btn btn-default">-1</a>
+              <div class="resource">Foraging: <span id="pop-foraging">0</span></div>
+              <a href="#" id="pop-foraging-max" class="btn btn-default">+1</a>
             </div>
             <div class="assign">
-              <a href="#" class="btn btn-default">-1</a>
-              <div class="resource">Water: <span id="pop-water">0</span></div>
-              <a href="#" class="btn btn-default">+1</a>
+              <a href="#" id="pop-salvaging-min" class="btn btn-default">-1</a>
+              <div class="resource">Salvaging: <span id="pop-salvaging">0</span></div>
+              <a href="#" id="pop-salvaging-max" class="btn btn-default">+1</a>
             </div>
             <div class="assign">
-              <a href="#" class="btn btn-default">-1</a>
-              <div class="resource">Exploring: <span id="pop-explore">0</span></div>
-              <a href="#" class="btn btn-default">+1</a>
+              <a href="#" id="pop-exploring-min" class="btn btn-default">-1</a>
+              <div class="resource">Exploring: <span id="pop-exploring">0</span></div>
+              <a href="#" id="pop-exploring-max" class="btn btn-default">+1</a>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Resources -->
+      <!-- Buildings -->
       <div class="col-md-4">
         <div class="panel panel-default">
-          <div class="panel-heading">Buildings</div>
+          <div class="panel-heading">Buildings<span id="bld-total">0</span></div>
           <div class="panel-body">
-            <ul id="building-list">
-              <li class="btn-group building">
-                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Shelter</span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Shelter</a></li>
-                  <li><a href="#">Food storage</a></li>
-                  <li><a href="#">Material storage</a></li>
-                </ul>
-              </li>
-              <li class="btn-group building">
-                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Food storage</span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Shelter</a></li>
-                  <li><a href="#">Food storage</a></li>
-                  <li><a href="#">Material storage</a></li>
-                </ul>
-              </li>
-            </ul>
-
+            <div class="assign">
+              <div class="resource">Empty: <span id="bld-empty">0</span></div>
+            </div>
+            <div class="assign"  style="padding-bottom:10px">
+              <div class="resource">Infected: <span id="bld-infected">0</span></div>
+            </div>
+            <div class="assign">
+              <a href="#" id="bld-shelter-min" class="btn btn-default">-1</a>
+              <div class="resource">Shelter: <span id="bld-shelter">0</span></div>
+              <a href="#" id="bld-shelter-max" class="btn btn-default">+1</a>
+            </div>
+            <div class="assign">
+              <a href="#" id="bld-food-min" class="btn btn-default">-1</a>
+              <div class="resource">Food: <span id="bld-food">0</span></div>
+              <a href="#" id="bld-food-max" class="btn btn-default">+1</a>
+            </div>
+            <div class="assign">
+              <a href="#" id="bld-materials-min" class="btn btn-default">-1</a>
+              <div class="resource">Materials: <span id="bld-materials">0</span></div>
+              <a href="#" id="bld-materials-max" class="btn btn-default">+1</a>
+            </div>
           </div>
         </div>
+      </div>
+
+
+    </div>
+
+
+    <!-- Actions -->
+    <div class="row">
+      <div class="actions">
+        <a href="#" id="add-population" class="btn btn-primary">Add population</a>
+        <a href="#" id="turn" class="btn btn-success">End Turn</a>
       </div>
     </div>
   </div>
-
-
-
-
 
 </body>
 </html>
