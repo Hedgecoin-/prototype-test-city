@@ -18,7 +18,11 @@
     <h1>City Prototype</h1>
   </div>
 
-  <div class="container">
+  <div id="lose-wrapper">
+    <a id="lose" href="#" class="btn btn-danger lose">You lose. Restart?</a>
+  </div>
+
+  <div class="container" id="game">
     <div class="row">
       <!-- Resources -->
       <div class="col-md-4">
@@ -26,7 +30,7 @@
           <div class="panel-heading">Resources</span></div>
           <div class="panel-body">
             <div class="assign">
-              <div class="resource">Food: <span class="resource-name" id="res-food">0</span><span id="res-food-delta" class="delta">+0</span></div>
+              <div class="resource">Food: <span class="resource-name" id="res-food">0</span>/<span id="res-food-max">0</span><span id="res-food-delta" class="delta">+0</span></div>
             </div>
             <div class="assign">
               <div class="resource">Materials: <span class="resource-name" id="res-materials">0</span><span id="res-materials-delta" class="delta">+0</span></div>
@@ -79,8 +83,9 @@
             <div class="assign">
               <div class="resource">Empty: <span id="bld-empty">0</span></div>
             </div>
-            <div class="assign"  style="padding-bottom:10px">
+            <div class="assign"  style="min-height:38px;">
               <div class="resource">Infected: <span id="bld-infected">0</span></div>
+              <a href="#" id="bld-clear-infected" class="btn btn-warning">Clear for 5 Materials</a>
             </div>
             <div class="assign">
               <a href="#" id="bld-shelter-min" class="btn btn-default">-1</a>
@@ -96,10 +101,6 @@
               <a href="#" id="bld-materials-min" class="btn btn-default">-1</a>
               <div class="resource">Materials storage: <span id="bld-materials">0</span></div>
               <a href="#" id="bld-materials-max" class="btn btn-default">+1</a>
-            </div>
-
-            <div class="clear-infected">
-              <a href="#" id="bld-clear-infected" class="btn btn-warning">Clear infected building</a>
             </div>
           </div>
         </div>

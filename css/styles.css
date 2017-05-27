@@ -3,7 +3,14 @@
   text-align: center;
   padding: 25px 0 100px 0;
 }
-
+#lose-wrapper {
+  display: none;
+  width: 100%;
+  text-align: center;
+}
+#lose {
+  width: 25%;
+}
 
 /*******************************
 
@@ -52,10 +59,6 @@
   display: grid;
   padding: 5px;
 }
-.clear-infected {
-  margin-top: 25px;
-}
-
 
 /*******************************
 

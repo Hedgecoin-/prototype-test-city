@@ -18,7 +18,7 @@ $(document).ready(function(){
         production: 2,
       },
       materials: {
-        number: 2,
+        number: 0,
         delta: 0,
         consumption: 0,
         production: 1,
@@ -37,12 +37,14 @@ $(document).ready(function(){
       },
     },
     buildings: {
-      empty: 1,
-      infected: 2,
+      empty: 0,
+      infected: 0,
       clearInfectedCost: 5,
       shelter: 0,
       food: 0,
+      foodStorage: 10,
       materials: 0,
+      materialsStorage: 10,
     },
   }
 
@@ -51,6 +53,7 @@ $(document).ready(function(){
       food: {
         number: $('#res-food'),
         delta: $('#res-food-delta'),
+        max: $('#res-food-max'),
       },
       materials: {
         number: $('#res-materials'),
@@ -122,7 +125,7 @@ $(document).ready(function(){
 
   function UpdateGameState(){
     // update the numbers
-    gameState.resources.food.number += CalculateFoodDelta();
+    UpdateFood();
     gameState.resources.materials.number += CalculateMaterialsDelta();
     gameState.resources.fuel.number += CalculateFuelDelta();
     gameState.resources.medicine.number += CalculateMedicineDelta();
@@ -133,10 +136,45 @@ $(document).ready(function(){
     }
   }
 
+  function UpdateFood(){
+    // collect new food
+    gameState.resources.food.number += CalculateFoodDelta();
+
+    // rot excess food
+    var excessFood = Math.max(0, gameState.resources.food.number - CalculateMaxFoodStorage());
+    gameState.resources.food.number -= excessFood;
+
+    while(gameState.resources.food.number < 0){
+      var job;
+      switch (GetRandomInt(1, 4)) {
+        case 1:
+          job = 'idle';
+          break;
+        case 2:
+          job = 'foraging';
+          break;
+        case 3:
+          job = 'salvaging';
+          break;
+        case 4:
+          job = 'exploring';
+          break;
+        default:
+          break;
+      }
+      CannibalizeDueToInsufficientFood(job);
+    }
+  }
+
+  function CannibalizeDueToInsufficientFood(job){
+    if(gameState.population[job] > 0){
+      gameState.population[job]--;
+      gameState.resources.food.number++;
+    }
+  }
+
   function Explore(){
-    var min = 1;
-    var max = 10;
-    switch (Math.floor(Math.random() * (max - min + 1)) + min) {
+    switch (GetRandomInt(1, 12)) {
       case 1:
         gameState.buildings.empty++;
         break;
@@ -150,6 +188,11 @@ $(document).ready(function(){
       case 5:
         gameState.resources.medicine.number++;
         break;
+      case 6:
+      case 7:
+      case 8:
+        gameState.population.idle++;
+        break;
       default: // do nothing
         break;
     }
@@ -161,6 +204,7 @@ $(document).ready(function(){
     var rRes = refs.resources;
     var res = gameState.resources;
     rRes.food.number.text(res.food.number);
+    rRes.food.max.text(CalculateMaxFoodStorage());
     rRes.materials.number.text(res.materials.number);
     rRes.fuel.number.text(res.fuel.number);
     rRes.medicine.number.text(res.medicine.number);
@@ -182,10 +226,15 @@ $(document).ready(function(){
     rBld.total.text(CalculateTotalBuildings());
     rBld.empty.text(bld.empty);
     rBld.infected.text(bld.infected);
+    rBld.clearInfected.toggle(gameState.buildings.infected > 0);
     rBld.shelter.number.text(bld.shelter);
     rBld.food.number.text(bld.food);
     rBld.materials.number.text(bld.materials);
 
+    // lose conditions
+    if(CalculateTotalPopulation() == 0){
+      Lose();
+    }
   }
 
   function CalculateTotalPopulation(){
@@ -195,6 +244,10 @@ $(document).ready(function(){
 
   function CalculateNotHousedPopulation(){
     return CalculateTotalPopulation();
+  }
+
+  function CalculateMaxFoodStorage(){
+    return gameState.buildings.food * gameState.buildings.foodStorage;
   }
 
   function CalculateFoodDelta(){
@@ -322,5 +375,17 @@ $(document).ready(function(){
     }
   }
 
+
+  function GetRandomInt(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function Lose(){
+    $('#game').hide();
+    $('#lose-wrapper').show();
+    $('#lose').click(function(){
+      location.reload();
+    });
+  }
 
 });
