@@ -12,13 +12,13 @@ $(document).ready(function(){
     },
     resources: {
       food: {
-        number: 10,
+        number: 0,
         delta: 0,
         consumption: 1,
         production: 2,
       },
       materials: {
-        number: 12,
+        number: 2,
         delta: 0,
         consumption: 0,
         production: 1,
@@ -37,7 +37,7 @@ $(document).ready(function(){
       },
     },
     buildings: {
-      empty: 0,
+      empty: 1,
       infected: 2,
       clearInfectedCost: 5,
       shelter: 0,
@@ -121,8 +121,40 @@ $(document).ready(function(){
   }
 
   function UpdateGameState(){
+    // update the numbers
+    gameState.resources.food.number += CalculateFoodDelta();
+    gameState.resources.materials.number += CalculateMaterialsDelta();
+    gameState.resources.fuel.number += CalculateFuelDelta();
+    gameState.resources.medicine.number += CalculateMedicineDelta();
 
+    // run explore
+    for(var i=0; i< gameState.population.exploring; i++){
+      Explore();
+    }
   }
+
+  function Explore(){
+    var min = 1;
+    var max = 10;
+    switch (Math.floor(Math.random() * (max - min + 1)) + min) {
+      case 1:
+        gameState.buildings.empty++;
+        break;
+      case 2:
+      case 3:
+        gameState.buildings.infected++;
+        break;
+      case 4:
+        gameState.resources.fuel.number++;
+        break;
+      case 5:
+        gameState.resources.medicine.number++;
+        break;
+      default: // do nothing
+        break;
+    }
+  }
+
 
   function UpdateUI(){
     // resources
