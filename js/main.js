@@ -14,23 +14,32 @@ $(document).ready(function(){
       food: {
         number: 10,
         delta: 0,
+        consumption: 1,
+        production: 2,
       },
       materials: {
-        number: 5,
+        number: 12,
         delta: 0,
+        consumption: 0,
+        production: 1,
       },
       fuel: {
         number: 0,
         delta: 0,
+        consumption: 0,
+        production: 1,
       },
       medicine: {
         number: 0,
         delta: 0,
+        consumption: 0,
+        production: 1,
       },
     },
     buildings: {
-      empty: 1,
-      infected: 1,
+      empty: 0,
+      infected: 2,
+      clearInfectedCost: 5,
       shelter: 0,
       food: 0,
       materials: 0,
@@ -80,6 +89,7 @@ $(document).ready(function(){
       total: $('#bld-total'),
       empty: $('#bld-empty'),
       infected: $('#bld-infected'),
+      clearInfected: $('#bld-clear-infected'),
       shelter: {
         min: $('#bld-shelter-min'),
         number: $('#bld-shelter'),
@@ -93,7 +103,7 @@ $(document).ready(function(){
       materials: {
         min: $('#bld-materials-min'),
         number: $('#bld-materials'),
-        max: $('#bld-material-max'),
+        max: $('#bld-materials-max'),
       },
     }
   }
@@ -106,9 +116,12 @@ $(document).ready(function(){
   UpdateUI();
 
   function Update(){
-
-
+    UpdateGameState();
     UpdateUI();
+  }
+
+  function UpdateGameState(){
+
   }
 
   function UpdateUI(){
@@ -116,13 +129,10 @@ $(document).ready(function(){
     var rRes = refs.resources;
     var res = gameState.resources;
     rRes.food.number.text(res.food.number);
-    rRes.food.delta.text(res.food.delta);
     rRes.materials.number.text(res.materials.number);
-    rRes.materials.delta.text(res.materials.delta);
     rRes.fuel.number.text(res.fuel.number);
-    rRes.fuel.delta.text(res.fuel.delta);
     rRes.medicine.number.text(res.medicine.number);
-    rRes.medicine.delta.text(res.medicine.delta);
+    CalculateDeltas();
 
     // population
     var rPop = refs.population;
@@ -153,6 +163,24 @@ $(document).ready(function(){
 
   function CalculateNotHousedPopulation(){
     return CalculateTotalPopulation();
+  }
+
+  function CalculateFoodDelta(){
+    gameState.resources.food.delta = gameState.population.foraging * gameState.resources.food.production - CalculateTotalPopulation() * gameState.resources.food.consumption;
+    return gameState.resources.food.delta;
+  }
+
+  function CalculateMaterialsDelta(){
+    gameState.resources.materials.delta = gameState.population.salvaging * gameState.resources.materials.production - CalculateTotalPopulation() * gameState.resources.materials.consumption;
+    return gameState.resources.materials.delta;
+  }
+
+  function CalculateFuelDelta(){
+    return 0;
+  }
+
+  function CalculateMedicineDelta(){
+    return 0;
   }
 
   function CalculateTotalBuildings(){
@@ -192,6 +220,33 @@ $(document).ready(function(){
 
     bld.materials.min.click(function() { RemoveBuilding('materials'); });
     bld.materials.max.click(function() { AddBuilding('materials'); });
+
+    // clear infected building
+    bld.clearInfected.click(ClearInfectedBuilding);
+  }
+
+
+  function CalculateDeltas(){
+    FormatDelta(CalculateFoodDelta(), refs.resources.food.delta);
+    FormatDelta(CalculateMaterialsDelta(), refs.resources.materials.delta);
+    FormatDelta(CalculateFuelDelta(), refs.resources.fuel.delta);
+    FormatDelta(CalculateMedicineDelta(), refs.resources.medicine.delta);
+  }
+
+  function FormatDelta(delta, ref) {
+    ref.removeClass('decrease increase');
+
+    if(delta > 0){
+      ref.addClass('increase');
+      ref.text("+" + delta);
+    }
+    else if(delta < 0){
+      ref.addClass('decrease');
+      ref.text(delta);
+    }
+    else {
+      ref.text(delta);
+    }
   }
 
   function AddPop(job){
@@ -222,6 +277,15 @@ $(document).ready(function(){
     if(gameState.buildings[job] > 0){
       gameState.buildings.empty++;
       gameState.buildings[job]--;
+      UpdateUI();
+    }
+  }
+
+  function ClearInfectedBuilding(){
+    if(gameState.buildings.infected > 0 && gameState.resources.materials.number >= gameState.buildings.clearInfectedCost){
+      gameState.buildings.infected--;
+      gameState.buildings.empty++;
+      gameState.resources.materials.number -= gameState.buildings.clearInfectedCost;
       UpdateUI();
     }
   }
