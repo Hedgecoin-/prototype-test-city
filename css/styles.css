@@ -1,0 +1,16 @@
+.title {
+  width: 100%;
+  text-align: center;
+  padding: 25px 0 100px 0;
+}
+
+.assign {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.resource-name {
+  min-width: 120px;
+  text-align: center;
+  padding-top: 10px;
+}
