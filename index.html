@@ -5,8 +5,8 @@
   <meta charset="utf-8">
   <title>Prototype</title>
 
-  <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -26,13 +26,13 @@
           <div class="panel-heading">Resources</span></div>
           <div class="panel-body">
             <div class="assign">
-              <div class="resource">Food: <span class="resource-name" id="res-food">0</span></div>
+              <div class="resource">Food: <span class="resource-name" id="res-food">0</span><span class="resource-increase">+0</span></div>
             </div>
             <div class="assign">
-              <div class="resource">Water: <span class="resource-name" id="res-water">0</span></div>
+              <div class="resource">Water: <span class="resource-name" id="res-water">0</span><span class="resource-increase">+0</span></div>
             </div>
             <div class="assign">
-              <div class="resource">Tools: <span class="resource-name" id="res-tools">0</span></div>
+              <div class="resource">Materials: <span class="resource-name" id="res-materials">0</span><span class="resource-increase">+0</span></div>
             </div>
           </div>
         </div>
@@ -43,6 +43,9 @@
         <div class="panel panel-default">
           <div class="panel-heading">Population</div>
           <div class="panel-body">
+            <div class="assign" style="padding-bottom:10px">
+              <div class="resource">Housed: <span id="pop-housed">0/0</span></div>
+            </div>
             <div class="assign">
               <a href="#" class="btn btn-default">-1</a>
               <div class="resource">Idle: <span id="pop-idle">0</span></div>
@@ -51,6 +54,11 @@
             <div class="assign">
               <a href="#" class="btn btn-default">-1</a>
               <div class="resource">Foraging: <span id="pop-forage">0</span></div>
+              <a href="#" class="btn btn-default">+1</a>
+            </div>
+            <div class="assign">
+              <a href="#" class="btn btn-default">-1</a>
+              <div class="resource">Water: <span id="pop-water">0</span></div>
               <a href="#" class="btn btn-default">+1</a>
             </div>
             <div class="assign">
@@ -67,6 +75,24 @@
         <div class="panel panel-default">
           <div class="panel-heading">Buildings</div>
           <div class="panel-body">
+            <ul id="building-list">
+              <li class="btn-group building">
+                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Shelter</span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Shelter</a></li>
+                  <li><a href="#">Food storage</a></li>
+                  <li><a href="#">Material storage</a></li>
+                </ul>
+              </li>
+              <li class="btn-group building">
+                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Food storage</span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Shelter</a></li>
+                  <li><a href="#">Food storage</a></li>
+                  <li><a href="#">Material storage</a></li>
+                </ul>
+              </li>
+            </ul>
 
           </div>
         </div>

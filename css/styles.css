@@ -4,17 +4,39 @@
   padding: 25px 0 100px 0;
 }
 
+
+/*******************************
+
+           RESOURCES
+
+*******************************/
 .assign {
   display: flex;
   margin-bottom: 5px;
 }
-
-.resource-name {
-  padding-left: 10px;
-}
-
 .resource {
   min-width: 100px;
   text-align: center;
   padding-top: 10px;
+}
+.resource-increase {
+  padding-left: 10px;
+  color: #8CC152;
+}
+.resource-name {
+  padding-left: 10px;
+}
+
+
+/*******************************
+
+           BUILDINGS
+
+*******************************/
+#building-list{
+  padding: 5px 25px;
+}
+.building {
+  display: grid;
+  padding: 5px;
 }
