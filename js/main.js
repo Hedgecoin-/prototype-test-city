@@ -43,8 +43,10 @@ $(document).ready(function(){
       shelter: 0,
       food: 0,
       foodStorage: 10,
+      foodStorageDefault: 5,
       materials: 0,
       materialsStorage: 10,
+      materialsStorageDefault: 5,
     },
   }
 
@@ -58,6 +60,7 @@ $(document).ready(function(){
       materials: {
         number: $('#res-materials'),
         delta: $('#res-materials-delta'),
+        max: $('#res-materials-max'),
       },
       fuel: {
         number: $('#res-fuel'),
@@ -127,7 +130,7 @@ $(document).ready(function(){
   function UpdateGameState(){
     // update the numbers
     UpdateFood();
-    gameState.resources.materials.number += CalculateMaterialsDelta();
+    UpdateMaterials();
     gameState.resources.fuel.number += CalculateFuelDelta();
     gameState.resources.medicine.number += CalculateMedicineDelta();
 
@@ -135,6 +138,16 @@ $(document).ready(function(){
     for(var i=0; i< gameState.population.exploring; i++){
       Explore();
     }
+  }
+
+  function UpdateMaterials() {
+    // collect new materials
+    gameState.resources.materials.number += CalculateMaterialsDelta();
+
+    // rot excess materials
+    var excessMaterials = Math.max(0, gameState.resources.materials.number - CalculateMaxMaterialsStorage());
+    gameState.resources.materials.number -= excessMaterials;
+
   }
 
   function UpdateFood(){
@@ -174,6 +187,7 @@ $(document).ready(function(){
     rRes.food.number.text(res.food.number);
     rRes.food.max.text(CalculateMaxFoodStorage());
     rRes.materials.number.text(res.materials.number);
+    rRes.materials.max.text(CalculateMaxMaterialsStorage());
     rRes.fuel.number.text(res.fuel.number);
     rRes.medicine.number.text(res.medicine.number);
     CalculateDeltas();
@@ -277,7 +291,11 @@ $(document).ready(function(){
   }
 
   function CalculateMaxFoodStorage(){
-    return gameState.buildings.food * gameState.buildings.foodStorage;
+    return gameState.buildings.food * gameState.buildings.foodStorage + gameState.buildings.foodStorageDefault;
+  }
+
+  function CalculateMaxMaterialsStorage(){
+    return gameState.buildings.materials * gameState.buildings.materialsStorage + gameState.buildings.materialsStorageDefault;
   }
 
   function CalculateFoodDelta(){
