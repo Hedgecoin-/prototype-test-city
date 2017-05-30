@@ -271,10 +271,10 @@ $(document).ready(function(){
     alert.fadeIn();
     setTimeout(function(){
       alert.fadeOut();
-    }, 1000);
+    }, 5000);
     setTimeout(function(){
       alert.remove();
-    }, 5000);
+    }, 6000);
 
   }
 
