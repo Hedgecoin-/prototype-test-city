@@ -96,6 +96,7 @@ $(document).ready(function(){
       empty: $('#bld-empty'),
       infected: $('#bld-infected'),
       clearInfected: $('#bld-clear-infected'),
+      createMedicine: $('#create-medicine'),
       shelter: {
         min: $('#bld-shelter-min'),
         number: $('#bld-shelter'),
@@ -158,6 +159,11 @@ $(document).ready(function(){
     var excessFood = Math.max(0, gameState.resources.food.number - CalculateMaxFoodStorage());
     gameState.resources.food.number -= excessFood;
 
+    if(gameState.resources.food.number < 0){
+      var cannibalizedPop = 0 - gameState.resources.food.number;
+      DisplayPopupMessage('danger', 'Not enough food!', "You didn't have enough food, " + cannibalizedPop + (cannibalizedPop == 1 ? " person has" :" people have") + " left.");
+    }
+
     while(gameState.resources.food.number < 0){
       var job;
       switch (GetRandomInt(1, 4)) {
@@ -208,10 +214,11 @@ $(document).ready(function(){
     rBld.total.text(CalculateTotalBuildings());
     rBld.empty.text(bld.empty);
     rBld.infected.text(bld.infected);
-    rBld.clearInfected.toggle(gameState.buildings.infected > 0);
+    rBld.clearInfected.fadeTo('slow', gameState.buildings.infected > 0 ? 1 : 0.2);
     rBld.shelter.number.text(bld.shelter);
     rBld.food.number.text(bld.food);
     rBld.materials.number.text(bld.materials);
+    rBld.createMedicine.fadeTo('slow', gameState.resources.materials.number >= 10 && gameState.resources.fuel.number > 0 ? 1 : 0.2);
 
     // lose conditions
     if(CalculateTotalPopulation() == 0){
@@ -271,11 +278,10 @@ $(document).ready(function(){
     alert.fadeIn();
     setTimeout(function(){
       alert.fadeOut();
-    }, 5000);
+    }, 4000);
     setTimeout(function(){
       alert.remove();
-    }, 6000);
-
+    }, 5000);
   }
 
 
@@ -332,6 +338,16 @@ $(document).ready(function(){
       UpdateUI();
     });
 
+    $('#add-fuel').click(function() {
+      gameState.resources.fuel.number++;
+      UpdateUI();
+    });
+
+    $('#add-medicine').click(function() {
+      gameState.resources.medicine.number++;
+      UpdateUI();
+    });
+
     // population
     var pop = refs.population;
     pop.foraging.min.click(function() { RemovePop('foraging'); });
@@ -356,6 +372,9 @@ $(document).ready(function(){
 
     // clear infected building
     bld.clearInfected.click(ClearInfectedBuilding);
+
+    // create medicine
+    bld.createMedicine.click(CreateMedicine);
   }
 
 
@@ -419,6 +438,15 @@ $(document).ready(function(){
       gameState.buildings.infected--;
       gameState.buildings.empty++;
       gameState.resources.materials.number -= gameState.buildings.clearInfectedCost;
+      UpdateUI();
+    }
+  }
+
+  function CreateMedicine(){
+    if(gameState.resources.materials.number >= 10 && gameState.resources.fuel.number > 0){
+      gameState.resources.materials.number -= 10;
+      gameState.resources.fuel.number--;
+      gameState.resources.medicine.number += 5;
       UpdateUI();
     }
   }

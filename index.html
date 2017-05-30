@@ -88,7 +88,7 @@
             </div>
             <div class="assign"  style="min-height:38px;">
               <div class="resource">Infected: <span id="bld-infected">0</span></div>
-              <a href="#" id="bld-clear-infected" class="btn btn-warning">Clear for 5 Materials</a>
+              <a style="display:none;" href="#" id="bld-clear-infected" class="btn btn-warning">Clear for 5 Materials</a>
             </div>
             <div class="assign">
               <a href="#" id="bld-shelter-min" class="btn btn-default">-1</a>
@@ -105,9 +105,10 @@
               <div class="resource">Materials storage: <span id="bld-materials">0</span></div>
               <a href="#" id="bld-materials-max" class="btn btn-default">+1</a>
             </div>
-            <div id="convert-fuel-wrapper">              
-              <div id="convert-fuel" class="btn btn-info">
-                Convert Fuel
+
+            <div class="create-medicine-wrapper">
+              <div id="create-medicine" class="btn btn-info" style="display: none;">
+                Create Medicine
               </div>
             </div>
           </div>
@@ -122,6 +123,8 @@
     <div class="row">
       <div class="actions">
         <a href="#" id="add-population" class="btn btn-danger">Add population</a>
+        <a href="#" id="add-fuel" class="btn btn-danger">Add Fuel</a>
+        <a href="#" id="add-medicine" class="btn btn-danger">Add Medicine</a>
         <a href="#" id="turn" class="btn btn-success">End Turn</a>
       </div>
     </div>
