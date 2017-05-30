@@ -6,6 +6,7 @@ $(document).ready(function(){
   var gameState = {
     population: {
       idle: 5,
+      infected: 0,
       foraging: 0,
       salvaging: 0,
       exploring: 0,
@@ -74,7 +75,9 @@ $(document).ready(function(){
     population: {
       total: $('#pop-total'),
       notHoused: $('#pop-not-housed'),
+      infected: $('#pop-infected'),
       idle: $('#pop-idle'),
+      useMedicine: $('#pop-use-medicine'),
       foraging: {
         min: $('#pop-foraging-min'),
         number: $('#pop-foraging'),
@@ -132,6 +135,7 @@ $(document).ready(function(){
     // update the numbers
     UpdateFood();
     UpdateMaterials();
+
     gameState.resources.fuel.number += CalculateFuelDelta();
     gameState.resources.medicine.number += CalculateMedicineDelta();
 
@@ -203,6 +207,8 @@ $(document).ready(function(){
     var pop = gameState.population;
     rPop.total.text(CalculateTotalPopulation());
     rPop.notHoused.text(CalculateNotHousedPopulation());
+    rPop.infected.text(pop.infected);
+    rPop.useMedicine.fadeTo('slow', gameState.population.infected > 0 && gameState.resources.medicine.number > 0 ? 1 : 0.2);
     rPop.idle.text(pop.idle);
     rPop.foraging.number.text(pop.foraging);
     rPop.salvaging.number.text(pop.salvaging);
@@ -289,7 +295,7 @@ $(document).ready(function(){
 
   function CalculateTotalPopulation(){
     var pop = gameState.population;
-    return pop.idle + pop.foraging + pop.salvaging + pop.exploring;
+    return pop.idle + pop.foraging + pop.salvaging + pop.exploring + pop.infected;
   }
 
   function CalculateNotHousedPopulation(){
@@ -350,6 +356,7 @@ $(document).ready(function(){
 
     // population
     var pop = refs.population;
+    pop.useMedicine.click(function() { UseMedicine(); });
     pop.foraging.min.click(function() { RemovePop('foraging'); });
     pop.foraging.max.click(function() { AddPop('foraging'); });
 
@@ -447,6 +454,15 @@ $(document).ready(function(){
       gameState.resources.materials.number -= 10;
       gameState.resources.fuel.number--;
       gameState.resources.medicine.number += 5;
+      UpdateUI();
+    }
+  }
+
+  function UseMedicine() {
+    if(gameState.resources.medicine.number > 0 && gameState.population.infected > 0){
+      gameState.resources.medicine.number--;
+      gameState.population.infected--;
+      gameState.population.idle++;
       UpdateUI();
     }
   }
