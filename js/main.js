@@ -274,7 +274,7 @@ $(document).ready(function(){
     }, 1000);
     setTimeout(function(){
       alert.remove();
-    }, 2000);
+    }, 5000);
 
   }
 
