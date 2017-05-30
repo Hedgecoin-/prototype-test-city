@@ -243,7 +243,7 @@ $(document).ready(function(){
         break;
       case 5:
         gameState.resources.medicine.number++;
-        DisplayPopupMessage('success', 'We found Medicine!', 'This is great! We found some medicine.');
+        DisplayPopupMessage('info', 'We found Medicine!', 'This is great! We found some medicine.');
         break;
       case 6:
       case 7:
