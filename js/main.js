@@ -108,7 +108,8 @@ $(document).ready(function(){
         number: $('#bld-materials'),
         max: $('#bld-materials-max'),
       },
-    }
+    },
+    alert: $('#alert-wrapper'),
   }
 
 
@@ -166,39 +167,6 @@ $(document).ready(function(){
     }
   }
 
-  function CannibalizeDueToInsufficientFood(job){
-    if(gameState.population[job] > 0){
-      gameState.population[job]--;
-      gameState.resources.food.number++;
-    }
-  }
-
-  function Explore(){
-    switch (GetRandomInt(1, 12)) {
-      case 1:
-        gameState.buildings.empty++;
-        break;
-      case 2:
-      case 3:
-        gameState.buildings.infected++;
-        break;
-      case 4:
-        gameState.resources.fuel.number++;
-        break;
-      case 5:
-        gameState.resources.medicine.number++;
-        break;
-      case 6:
-      case 7:
-      case 8:
-        gameState.population.idle++;
-        break;
-      default: // do nothing
-        break;
-    }
-  }
-
-
   function UpdateUI(){
     // resources
     var rRes = refs.resources;
@@ -236,6 +204,68 @@ $(document).ready(function(){
       Lose();
     }
   }
+
+  function CannibalizeDueToInsufficientFood(job){
+    if(gameState.population[job] > 0){
+      gameState.population[job]--;
+      gameState.resources.food.number++;
+    }
+  }
+
+  function Explore(){
+    switch (GetRandomInt(1, 12)) {
+      case 1:
+        gameState.buildings.empty++;
+        DisplayPopupMessage('success', 'Building Found', 'We found an empty building for use!');
+        break;
+      case 2:
+      case 3:
+        gameState.buildings.infected++;
+        DisplayPopupMessage('warning', 'Infected Building Found', 'We found an infected building, if we use 5 Materials we could use it.');
+        break;
+      case 4:
+        gameState.resources.fuel.number++;
+        DisplayPopupMessage('info', 'We found Fuel!', 'We found some fuel!');
+        break;
+      case 5:
+        gameState.resources.medicine.number++;
+        DisplayPopupMessage('success', 'We found Medicine!', 'This is great! We found some medicine.');
+        break;
+      case 6:
+      case 7:
+      case 8:
+        gameState.population.idle++;
+        DisplayPopupMessage('success', 'We found someone!', 'Another surviver!');
+        break;
+      case 9:
+        gameState.population.exploring--;
+        DisplayPopupMessage('danger', 'Missing!', "An explorer hasn't returned, we can only hope...");
+      default: // do nothing
+        break;
+    }
+  }
+
+  function DisplayPopupMessage(status, title, body) {
+    var alert = $(
+      '<div style="display:none;" class="alert alert-dismissible alert-' + status + '">' +
+        '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
+        '<h4>' + title + '</h4>' +
+        '<p>' + body + '</p>' +
+      '</div>');
+
+    refs.alert.append(alert);
+    alert.fadeIn();
+    setTimeout(function(){
+      alert.fadeOut();
+    }, 1000);
+    setTimeout(function(){
+      alert.remove();
+    }, 2000);
+
+  }
+
+
+
 
   function CalculateTotalPopulation(){
     var pop = gameState.population;
