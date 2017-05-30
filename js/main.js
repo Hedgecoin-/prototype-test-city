@@ -4,6 +4,8 @@ $(document).ready(function(){
 
 
   var gameState = {
+    infectionRate: 10,
+    unhousedInfectionRate: 20,
     population: {
       idle: 5,
       infected: 0,
@@ -134,6 +136,9 @@ $(document).ready(function(){
   }
 
   function UpdateGameState(){
+    // infection first
+    UpdateInfections();
+
     // update the numbers
     UpdateFood();
     UpdateMaterials();
@@ -146,6 +151,24 @@ $(document).ready(function(){
       Explore();
     }
   }
+
+  function UpdateInfections() {
+    var currentInfected = gameState.population.infected;
+    var numberOfNewlyInfected = 0;
+    for(var i=0; i<currentInfected; i++){
+      numberOfNewlyInfected += SimulateInfection(gameState.infectionRate);
+    }
+
+    var unhousedPopulation = CalculateNotHousedPopulation();
+    for(var i=0; i<unhousedPopulation; i++){
+      numberOfNewlyInfected += SimulateInfection(gameState.unhousedInfectionRate);
+    }
+
+    if(numberOfNewlyInfected > 0){
+      DisplayPopupMessage('danger', 'Infection!', (numberOfNewlyInfected == 1 ? 'Oh no! Someone has' : 'Oh no! ' + numberOfNewlyInfected + ' people have') + ' been infected!');
+    }
+  }
+
 
   function UpdateMaterials() {
     // collect new materials
@@ -230,7 +253,7 @@ $(document).ready(function(){
     rBld.createMedicine.fadeTo('slow', gameState.resources.materials.number >= 10 && gameState.resources.fuel.number > 0 ? 1 : 0.2);
 
     // lose conditions
-    if(CalculateTotalPopulation() - gameState.population.infected <= 0){
+    if(CalculateTotalPopulation() == 0 || CalculateTotalPopulation() == gameState.population.infected){
       Lose();
     }
   }
@@ -293,6 +316,48 @@ $(document).ready(function(){
     }, 5000);
   }
 
+  function SimulateInfection(rate){
+    switch (GetRandomInt(1, rate)) {
+      case 1:
+        InfectSomeone();
+        return 1;
+      default:
+        break;
+    }
+    return 0;
+  }
+
+  function InfectSomeone(){
+    var infectedSomeone = false;
+    while(!infectedSomeone){
+      var job;
+      switch (GetRandomInt(1, 4)) {
+        case 1:
+          job = 'idle';
+          break;
+        case 2:
+          job = 'foraging';
+          break;
+        case 3:
+          job = 'salvaging';
+          break;
+        case 4:
+          job = 'exploring';
+          break;
+        default:
+          break;
+      }
+
+      if(gameState.population[job] > 0){
+        gameState.population[job]--;
+        gameState.population.infected++;
+        infectedSomeone = true;
+      }
+    }
+  }
+
+
+
 
 
 
@@ -304,13 +369,16 @@ $(document).ready(function(){
   function CalculateHousedPopulation(){
     var rPop = refs.population;
     rPop.housed.removeClass('decrease increase');
-    var total = CalculateTotalPopulation();
-    if(total > CalculateMaxHousedPopulation()){
-      rPop.housed.addClass('decrease');
-    } else {
-      rPop.housed.addClass('increase');
-    }
-    rPop.housed.text(total);
+    rPop.housed.addClass(IsSufficientHousing() ? 'increase' : 'decrease');
+    rPop.housed.text(CalculateTotalPopulation());
+  }
+
+  function CalculateNotHousedPopulation() {
+    return Math.max(0, CalculateTotalPopulation() - CalculateMaxHousedPopulation());
+  }
+
+  function IsSufficientHousing() {
+    return CalculateTotalPopulation() <= CalculateMaxHousedPopulation();
   }
 
   function CalculateMaxHousedPopulation(){
