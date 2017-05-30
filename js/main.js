@@ -266,13 +266,12 @@ $(document).ready(function(){
   }
 
   function Explore(){
-    switch (GetRandomInt(1, 12)) {
+    switch (GetRandomInt(1, 15)) {
       case 1:
         gameState.buildings.empty++;
         DisplayPopupMessage('success', 'Building Found', 'We found an empty building for use!');
         break;
       case 2:
-      case 3:
         gameState.buildings.infected++;
         DisplayPopupMessage('warning', 'Infected Building Found', 'We found an infected building, if we use 5 Materials we could use it.');
         break;
@@ -287,10 +286,16 @@ $(document).ready(function(){
       case 6:
       case 7:
       case 8:
-        gameState.population.idle++;
-        DisplayPopupMessage('success', 'We found someone!', 'Another surviver!');
+        var newPopCount = GetRandomInt(1, 4);
+        gameState.population.idle += newPopCount;
+        newPopCount == 1 ? 
+          DisplayPopupMessage('success', 'We found someone!', 'Another survivor!'):
+          DisplayPopupMessage('success', 'We found ' + newPopCount + ' people!', 'More survivors!');
+        
         break;
       case 9:
+      case 10:
+      case 11:
         gameState.population.exploring--;
         DisplayPopupMessage('danger', 'Missing!', "An explorer hasn't returned, we can only hope...");
       default: // do nothing
