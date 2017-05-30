@@ -54,11 +54,11 @@
           <div class="panel-heading">Population <span id="pop-total">0</span></div>
           <div class="panel-body">
             <div class="assign">
-              <div class="resource">Not housed: <span id="pop-not-housed">0</span></div>
+              <div class="resource">Housed: <span id="pop-housed">0</span>/<span id="pop-max-housed">0</span></div>
             </div>
-            <div class="assign">
+            <div class="assign" style="min-height:38px;">
               <div class="resource">Infected: <span id="pop-infected">0</span></div>
-              <div id="pop-use-medicine" class="btn btn-info">Use Medicine</div>
+              <div style="display: none;" id="pop-use-medicine" class="btn btn-info">Use Medicine</div>
             </div>
             <div class="assign"  style="padding-bottom:10px">
               <div class="resource">Idle: <span id="pop-idle">0</span></div>
@@ -129,6 +129,7 @@
         <a href="#" id="add-population" class="btn btn-danger">Add population</a>
         <a href="#" id="add-fuel" class="btn btn-danger">Add Fuel</a>
         <a href="#" id="add-medicine" class="btn btn-danger">Add Medicine</a>
+        <a href="#" id="add-empty" class="btn btn-danger">Add Empty Building</a>
         <a href="#" id="turn" class="btn btn-success">End Turn</a>
       </div>
     </div>

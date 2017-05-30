@@ -42,6 +42,7 @@ $(document).ready(function(){
       infected: 0,
       clearInfectedCost: 5,
       shelter: 0,
+      shelterSize: 5,
       food: 0,
       foodStorage: 10,
       foodStorageDefault: 5,
@@ -74,7 +75,8 @@ $(document).ready(function(){
     },
     population: {
       total: $('#pop-total'),
-      notHoused: $('#pop-not-housed'),
+      housed: $('#pop-housed'),
+      maxHoused: $('#pop-max-housed'),
       infected: $('#pop-infected'),
       idle: $('#pop-idle'),
       useMedicine: $('#pop-use-medicine'),
@@ -206,7 +208,8 @@ $(document).ready(function(){
     var rPop = refs.population;
     var pop = gameState.population;
     rPop.total.text(CalculateTotalPopulation());
-    rPop.notHoused.text(CalculateNotHousedPopulation());
+    CalculateHousedPopulation();
+    rPop.maxHoused.text(CalculateMaxHousedPopulation());
     rPop.infected.text(pop.infected);
     rPop.useMedicine.fadeTo('slow', gameState.population.infected > 0 && gameState.resources.medicine.number > 0 ? 1 : 0.2);
     rPop.idle.text(pop.idle);
@@ -227,7 +230,7 @@ $(document).ready(function(){
     rBld.createMedicine.fadeTo('slow', gameState.resources.materials.number >= 10 && gameState.resources.fuel.number > 0 ? 1 : 0.2);
 
     // lose conditions
-    if(CalculateTotalPopulation() == 0){
+    if(CalculateTotalPopulation() - gameState.population.infected <= 0){
       Lose();
     }
   }
@@ -298,8 +301,20 @@ $(document).ready(function(){
     return pop.idle + pop.foraging + pop.salvaging + pop.exploring + pop.infected;
   }
 
-  function CalculateNotHousedPopulation(){
-    return CalculateTotalPopulation();
+  function CalculateHousedPopulation(){
+    var rPop = refs.population;
+    rPop.housed.removeClass('decrease increase');
+    var total = CalculateTotalPopulation();
+    if(total > CalculateMaxHousedPopulation()){
+      rPop.housed.addClass('decrease');
+    } else {
+      rPop.housed.addClass('increase');
+    }
+    rPop.housed.text(total);
+  }
+
+  function CalculateMaxHousedPopulation(){
+    return gameState.buildings.shelter * gameState.buildings.shelterSize;
   }
 
   function CalculateMaxFoodStorage(){
@@ -351,6 +366,11 @@ $(document).ready(function(){
 
     $('#add-medicine').click(function() {
       gameState.resources.medicine.number++;
+      UpdateUI();
+    });
+
+    $('#add-empty').click(function() {
+      gameState.buildings.empty++;
       UpdateUI();
     });
 
