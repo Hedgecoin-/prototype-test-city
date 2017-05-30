@@ -494,6 +494,7 @@ $(document).ready(function(){
 
   function Lose(){
     $('#game').hide();
+    $('#alert-wrapper').hide();
     $('#lose-wrapper').show();
     $('#lose').click(function(){
       location.reload();
